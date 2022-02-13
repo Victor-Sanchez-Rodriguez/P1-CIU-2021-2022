@@ -1,12 +1,17 @@
+import processing.sound.*;
+
 float ball_posX, ball_posY, pos_p1, pos_p2, ball_speed, ball_dirX, ball_dirY;
 int score1, score2;
 boolean enter_pressed;
 float mov_p1=0;
 float mov_p2=0;
 
+SoundFile  sonido;
+
 void setup(){
   enter_pressed=false;
   size(800,800);
+  sonido = new SoundFile(this,"./data/Bass-Drum-1.wav");
 }
 
 void draw(){
@@ -31,6 +36,7 @@ void draw(){
     
     if(ball_posX < 70 && ball_posX > 45){
       if(ball_posY+8>pos_p1 && ball_posY-68<pos_p1){
+        thread ("Suena");
         ball_dirX=1;
         if(ball_posY-45>pos_p1){
           ball_dirY=ball_dirY+0.2;
@@ -49,6 +55,7 @@ void draw(){
       }
     } else if(ball_posX > 730 && ball_posX < 755){
       if(ball_posY+8>pos_p2 && ball_posY-68<pos_p2){
+        thread ("Suena");
         ball_dirX=-1;
         if(ball_posY-45>pos_p2){
           ball_dirY=ball_dirY+0.2;
@@ -66,9 +73,11 @@ void draw(){
         }
       }
     } else if(ball_posX > 780){
+      thread ("Suena");
       score1 = score1+1;
       resetGame();
     } else if(ball_posX < 20){
+      thread ("Suena");
       score2 = score2+1;
       resetGame();
     }
@@ -77,9 +86,15 @@ void draw(){
       finishScreen();
     }
       
-    if(ball_posY<20) ball_dirY=abs(ball_dirY);
-    if(ball_posY>780) ball_dirY=-abs(ball_dirY);
-    
+    if(ball_posY<20) {
+      ball_dirY=abs(ball_dirY);
+      thread ("Suena");
+    }
+    if(ball_posY>780) {
+      ball_dirY=-abs(ball_dirY);
+      thread ("Suena");
+    }
+      
     ball_posX=ball_posX+ball_dirX*ball_speed;
     ball_posY=ball_posY+ball_dirY*ball_speed;
     
@@ -140,4 +155,8 @@ void keyPressed(){
 void keyReleased(){
   if (keyCode == UP || keyCode == DOWN) mov_p2 = 0;
   if (key == 'w' || key == 's') mov_p1 = 0;
+}
+
+void Suena( ) {  
+  sonido.play();
 }
